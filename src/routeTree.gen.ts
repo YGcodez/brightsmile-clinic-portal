@@ -10,33 +10,56 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicAppointmentsRouteImport } from './routes/api/public/appointments'
+import { Route as ApiPublicAppointmentsIdRouteImport } from './routes/api/public/appointments.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAppointmentsRoute = ApiPublicAppointmentsRouteImport.update({
+  id: '/api/public/appointments',
+  path: '/api/public/appointments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicAppointmentsIdRoute = ApiPublicAppointmentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiPublicAppointmentsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
+  '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
+  '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
+  '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/api/public/appointments' | '/api/public/appointments/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/api/public/appointments' | '/api/public/appointments/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/public/appointments'
+    | '/api/public/appointments/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiPublicAppointmentsRoute: typeof ApiPublicAppointmentsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +71,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/appointments': {
+      id: '/api/public/appointments'
+      path: '/api/public/appointments'
+      fullPath: '/api/public/appointments'
+      preLoaderRoute: typeof ApiPublicAppointmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/appointments/$id': {
+      id: '/api/public/appointments/$id'
+      path: '/$id'
+      fullPath: '/api/public/appointments/$id'
+      preLoaderRoute: typeof ApiPublicAppointmentsIdRouteImport
+      parentRoute: typeof ApiPublicAppointmentsRoute
+    }
   }
 }
 
+interface ApiPublicAppointmentsRouteChildren {
+  ApiPublicAppointmentsIdRoute: typeof ApiPublicAppointmentsIdRoute
+}
+
+const ApiPublicAppointmentsRouteChildren: ApiPublicAppointmentsRouteChildren = {
+  ApiPublicAppointmentsIdRoute: ApiPublicAppointmentsIdRoute,
+}
+
+const ApiPublicAppointmentsRouteWithChildren =
+  ApiPublicAppointmentsRoute._addFileChildren(
+    ApiPublicAppointmentsRouteChildren,
+  )
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiPublicAppointmentsRoute: ApiPublicAppointmentsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

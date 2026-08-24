@@ -69,16 +69,19 @@ export type Database = {
       }
       clinic_settings: {
         Row: {
+          api_key: string
           id: boolean
           updated_at: string
           webhook_url: string | null
         }
         Insert: {
+          api_key?: string
           id?: boolean
           updated_at?: string
           webhook_url?: string | null
         }
         Update: {
+          api_key?: string
           id?: boolean
           updated_at?: string
           webhook_url?: string | null

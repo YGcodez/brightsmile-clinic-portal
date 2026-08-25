@@ -78,7 +78,7 @@ function LoginForm() {
       >
         <h1 className="text-xl font-semibold text-foreground">Staff login</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Bright Smile Dental appointment管理 is restricted to practice staff.
+          Bright Smile Dental management is restricted to practice staff.
         </p>
         <label className="mt-6 block text-sm font-medium text-foreground">
           Email

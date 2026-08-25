@@ -10,12 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as BookRouteImport } from './routes/book'
 import { Route as ApiPublicAppointmentsRouteImport } from './routes/api/public/appointments'
 import { Route as ApiPublicAppointmentsIdRouteImport } from './routes/api/public/appointments.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicAppointmentsRoute = ApiPublicAppointmentsRouteImport.update({
@@ -31,34 +49,61 @@ const ApiPublicAppointmentsIdRoute = ApiPublicAppointmentsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/book': typeof BookRoute
   '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
   '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/book': typeof BookRoute
   '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
   '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
+  '/book': typeof BookRoute
   '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
   '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/public/appointments' | '/api/public/appointments/$id'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/book'
+    | '/api/public/appointments'
+    | '/api/public/appointments/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/public/appointments' | '/api/public/appointments/$id'
+  to:
+    | '/'
+    | '/about'
+    | '/admin'
+    | '/book'
+    | '/api/public/appointments'
+    | '/api/public/appointments/$id'
   id:
     | '__root__'
     | '/'
+    | '/about'
+    | '/admin'
+    | '/book'
     | '/api/public/appointments'
     | '/api/public/appointments/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
+  BookRoute: typeof BookRoute
   ApiPublicAppointmentsRoute: typeof ApiPublicAppointmentsRouteWithChildren
 }
 
@@ -69,6 +114,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/appointments': {
@@ -103,6 +169,9 @@ const ApiPublicAppointmentsRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
+  BookRoute: BookRoute,
   ApiPublicAppointmentsRoute: ApiPublicAppointmentsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

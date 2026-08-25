@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "sdk_version": "0.28.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://rdkumjlxmxcqwhgztudi.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "bright-smile-clinic",
+      "version": "0.1.0",
+      "title": "Bright Smile Clinic"
+    },
+    "tools": [
+      {
+        "name": "list_appointments",
+        "title": "List appointments",
+        "description": "List Bright Smile Dental appointment requests, optionally filtered by status, date range, or creation time.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Only return appointments with this status.",
+              "type": "string",
+              "enum": [
+                "requested",
+                "confirmed",
+                "reminded",
+                "completed",
+                "no_show",
+                "cancelled"
+              ]
+            },
+            "from_date": {
+              "description": "Earliest preferred_date, YYYY-MM-DD.",
+              "type": "string"
+            },
+            "to_date": {
+              "description": "Latest preferred_date, YYYY-MM-DD.",
+              "type": "string"
+            },
+            "since": {
+              "description": "Only appointments created after this ISO timestamp.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Maximum rows to return (default 50, max 200).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_appointment",
+        "title": "Get appointment",
+        "description": "Fetch a single Bright Smile Dental appointment by its id.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Appointment UUID."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_appointment_status",
+        "title": "Update appointment status",
+        "description": "Change the status of a Bright Smile Dental appointment (requested, confirmed, reminded, completed, no_show, cancelled).",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Appointment UUID."
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "requested",
+                "confirmed",
+                "reminded",
+                "completed",
+                "no_show",
+                "cancelled"
+              ],
+              "description": "New status."
+            }
+          },
+          "required": [
+            "id",
+            "status"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

@@ -61,9 +61,13 @@ export const Route = createFileRoute("/api/public/appointments/$id")({
           return Response.json({ error: "Invalid update payload" }, { status: 400 });
         }
 
+        const update: { status?: string; notes?: string | null } = {};
+        if (parsed.data.status !== undefined) update.status = parsed.data.status;
+        if (parsed.data.notes !== undefined) update.notes = parsed.data.notes;
+
         const { data, error } = await client
           .from("appointments")
-          .update(parsed.data)
+          .update(update)
           .eq("id", params.id)
           .select(SELECT)
           .maybeSingle();

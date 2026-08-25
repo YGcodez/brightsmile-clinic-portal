@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SERVICE_NAMES, TIME_SLOTS, CLINIC } from "@/lib/clinic";
-import { submitBooking } from "@/lib/booking.functions";
+import { submitBooking, type BookingInput } from "@/lib/booking.functions";
 
 const TITLE = "Book an Appointment — Bright Smile Dental";
 const DESCRIPTION =
@@ -33,7 +33,7 @@ function BookPage() {
   const [done, setDone] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: (data: Parameters<typeof book>[0]["data"]) => book({ data }),
+    mutationFn: (data: BookingInput) => book({ data }),
     onSuccess: () => {
       setDone(true);
       toast.success("Appointment request sent");

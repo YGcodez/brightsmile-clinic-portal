@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as BookRouteImport } from './routes/book'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicAppointmentsRouteImport } from './routes/api/public/appointments'
 import { Route as ApiPublicAppointmentsIdRouteImport } from './routes/api/public/appointments.$id'
 
@@ -36,6 +37,11 @@ const BookRoute = BookRouteImport.update({
   path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicAppointmentsRoute = ApiPublicAppointmentsRouteImport.update({
   id: '/api/public/appointments',
   path: '/api/public/appointments',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/book': typeof BookRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
   '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/book': typeof BookRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
   '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/book': typeof BookRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/appointments': typeof ApiPublicAppointmentsRouteWithChildren
   '/api/public/appointments/$id': typeof ApiPublicAppointmentsIdRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/book'
+    | '/.lovable/oauth/consent'
     | '/api/public/appointments'
     | '/api/public/appointments/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/book'
+    | '/.lovable/oauth/consent'
     | '/api/public/appointments'
     | '/api/public/appointments/$id'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/book'
+    | '/.lovable/oauth/consent'
     | '/api/public/appointments'
     | '/api/public/appointments/$id'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   BookRoute: typeof BookRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiPublicAppointmentsRoute: typeof ApiPublicAppointmentsRouteWithChildren
 }
 
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/book'
       fullPath: '/book'
       preLoaderRoute: typeof BookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/appointments': {
@@ -172,6 +192,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   BookRoute: BookRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   ApiPublicAppointmentsRoute: ApiPublicAppointmentsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

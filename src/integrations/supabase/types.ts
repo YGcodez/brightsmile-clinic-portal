@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       appointments: {
         Row: {
+          confirmation_sent: boolean
+          confirmed_datetime: string | null
           created_at: string
           email: string
           id: string
@@ -25,11 +27,16 @@ export type Database = {
           phone: string
           preferred_date: string
           preferred_time: string
+          reminder_24h_sent: boolean
+          reminder_2h_sent: boolean
+          reminder_30m_sent: boolean
           service: string
           status: string
           updated_at: string
         }
         Insert: {
+          confirmation_sent?: boolean
+          confirmed_datetime?: string | null
           created_at?: string
           email: string
           id?: string
@@ -39,11 +46,16 @@ export type Database = {
           phone: string
           preferred_date: string
           preferred_time: string
+          reminder_24h_sent?: boolean
+          reminder_2h_sent?: boolean
+          reminder_30m_sent?: boolean
           service: string
           status?: string
           updated_at?: string
         }
         Update: {
+          confirmation_sent?: boolean
+          confirmed_datetime?: string | null
           created_at?: string
           email?: string
           id?: string
@@ -53,6 +65,9 @@ export type Database = {
           phone?: string
           preferred_date?: string
           preferred_time?: string
+          reminder_24h_sent?: boolean
+          reminder_2h_sent?: boolean
+          reminder_30m_sent?: boolean
           service?: string
           status?: string
           updated_at?: string

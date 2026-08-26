@@ -6,6 +6,11 @@ const patchSchema = z.object({
     .enum(["requested", "confirmed", "reminded", "completed", "no_show", "cancelled"])
     .optional(),
   notes: z.string().max(2000).nullable().optional(),
+  confirmed_datetime: z.string().datetime({ offset: true }).nullable().optional(),
+  confirmation_sent: z.boolean().optional(),
+  reminder_24h_sent: z.boolean().optional(),
+  reminder_2h_sent: z.boolean().optional(),
+  reminder_30m_sent: z.boolean().optional(),
 });
 
 async function authorize(request: Request) {

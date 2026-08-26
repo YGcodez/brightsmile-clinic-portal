@@ -135,6 +135,15 @@ function Dashboard() {
     onError: (error: Error) => toast.error(error.message),
   });
 
+  const confirmMutation = useMutation({
+    mutationFn: (vars: { id: string; confirmedDatetime: string }) => confirmSlot({ data: vars }),
+    onSuccess: () => {
+      toast.success("Appointment confirmed");
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+
   const webhookMutation = useMutation({
     mutationFn: (webhookUrl: string) => saveWebhook({ data: { webhookUrl } }),
     onSuccess: () => {
@@ -143,6 +152,7 @@ function Dashboard() {
     },
     onError: (error: Error) => toast.error(error.message),
   });
+
 
   const rows = useMemo(() => {
     const list = [...(appointments.data ?? [])];

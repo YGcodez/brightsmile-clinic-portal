@@ -107,6 +107,7 @@ function Dashboard() {
   const fetchAccess = useServerFn(getStaffAccess);
   const fetchAppointments = useServerFn(listAppointments);
   const setStatus = useServerFn(updateAppointmentStatus);
+  const confirmSlot = useServerFn(confirmAppointment);
   const fetchSettings = useServerFn(getIntegrationSettings);
   const saveWebhook = useServerFn(updateWebhookUrl);
 

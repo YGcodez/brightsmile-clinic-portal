@@ -9,9 +9,11 @@ import { APPOINTMENT_STATUSES } from "@/lib/clinic";
 import {
   listAppointments,
   updateAppointmentStatus,
+  confirmAppointment,
   getStaffAccess,
   getIntegrationSettings,
   updateWebhookUrl,
+  type Appointment,
 } from "@/lib/admin.functions";
 
 const TITLE = "Staff Login — Bright Smile Dental";

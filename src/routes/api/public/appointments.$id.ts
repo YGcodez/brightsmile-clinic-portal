@@ -27,7 +27,7 @@ async function authorize(request: Request) {
 }
 
 const SELECT =
-  "id, patient_id, patient_name, email, phone, service, preferred_date, preferred_time, notes, status, created_at, updated_at";
+  "id, patient_id, patient_name, email, phone, service, preferred_date, preferred_time, notes, status, created_at, updated_at, confirmed_datetime, confirmation_sent, reminder_24h_sent, reminder_2h_sent, reminder_30m_sent";
 
 export const Route = createFileRoute("/api/public/appointments/$id")({
   server: {

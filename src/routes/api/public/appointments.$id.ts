@@ -66,9 +66,27 @@ export const Route = createFileRoute("/api/public/appointments/$id")({
           return Response.json({ error: "Invalid update payload" }, { status: 400 });
         }
 
-        const update: { status?: string; notes?: string | null } = {};
+        const update: {
+          status?: string;
+          notes?: string | null;
+          confirmed_datetime?: string | null;
+          confirmation_sent?: boolean;
+          reminder_24h_sent?: boolean;
+          reminder_2h_sent?: boolean;
+          reminder_30m_sent?: boolean;
+        } = {};
         if (parsed.data.status !== undefined) update.status = parsed.data.status;
         if (parsed.data.notes !== undefined) update.notes = parsed.data.notes;
+        if (parsed.data.confirmed_datetime !== undefined)
+          update.confirmed_datetime = parsed.data.confirmed_datetime;
+        if (parsed.data.confirmation_sent !== undefined)
+          update.confirmation_sent = parsed.data.confirmation_sent;
+        if (parsed.data.reminder_24h_sent !== undefined)
+          update.reminder_24h_sent = parsed.data.reminder_24h_sent;
+        if (parsed.data.reminder_2h_sent !== undefined)
+          update.reminder_2h_sent = parsed.data.reminder_2h_sent;
+        if (parsed.data.reminder_30m_sent !== undefined)
+          update.reminder_30m_sent = parsed.data.reminder_30m_sent;
 
         const { data, error } = await client
           .from("appointments")

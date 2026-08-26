@@ -334,3 +334,53 @@ function Dashboard() {
     </div>
   );
 }
+
+function ConfirmCell({
+  row,
+  pending,
+  onConfirm,
+}: {
+  row: Appointment;
+  pending: boolean;
+  onConfirm: (confirmedDatetime: string) => void;
+}) {
+  const [value, setValue] = useState(() =>
+    row.confirmed_datetime
+      ? toLocalInputValue(row.confirmed_datetime)
+      : `${row.preferred_date}T09:00`,
+  );
+
+  if (row.status !== "requested") {
+    return (
+      <span className="text-xs text-muted-foreground">
+        {row.confirmed_datetime ? new Date(row.confirmed_datetime).toLocaleString() : "—"}
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <input
+        type="datetime-local"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        aria-label={`Confirmed date and time for ${row.patient_name}`}
+        className="rounded-lg border border-input bg-background px-2.5 py-1.5 text-xs text-foreground"
+      />
+      <button
+        type="button"
+        disabled={pending || !value}
+        onClick={() => onConfirm(value)}
+        className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground disabled:opacity-60"
+      >
+        Confirm appointment
+      </button>
+    </div>
+  );
+}
+
+function toLocalInputValue(iso: string) {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}

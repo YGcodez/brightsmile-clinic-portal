@@ -22,7 +22,15 @@ export type Appointment = {
   notes: string | null;
   status: string;
   created_at: string;
+  confirmed_datetime: string | null;
+  confirmation_sent: boolean;
+  reminder_24h_sent: boolean;
+  reminder_2h_sent: boolean;
+  reminder_30m_sent: boolean;
 };
+
+const APPOINTMENT_COLUMNS =
+  "id, patient_name, email, phone, service, preferred_date, preferred_time, notes, status, created_at, confirmed_datetime, confirmation_sent, reminder_24h_sent, reminder_2h_sent, reminder_30m_sent";
 
 export const getStaffAccess = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -42,12 +50,31 @@ export const listAppointments = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("appointments")
-      .select(
-        "id, patient_name, email, phone, service, preferred_date, preferred_time, notes, status, created_at",
-      )
+      .select(APPOINTMENT_COLUMNS)
       .order("preferred_date", { ascending: true });
     if (error) throw new Error(error.message);
     return (data ?? []) as Appointment[];
+  });
+
+export const confirmAppointment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        confirmedDatetime: z.string().min(1),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data, context }) => {
+    const when = new Date(data.confirmedDatetime);
+    if (Number.isNaN(when.getTime())) throw new Error("Invalid date and time");
+    const { error } = await context.supabase
+      .from("appointments")
+      .update({ status: "confirmed", confirmed_datetime: when.toISOString() })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
   });
 
 export const updateAppointmentStatus = createServerFn({ method: "POST" })

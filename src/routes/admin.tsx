@@ -9,9 +9,11 @@ import { APPOINTMENT_STATUSES } from "@/lib/clinic";
 import {
   listAppointments,
   updateAppointmentStatus,
+  confirmAppointment,
   getStaffAccess,
   getIntegrationSettings,
   updateWebhookUrl,
+  type Appointment,
 } from "@/lib/admin.functions";
 
 const TITLE = "Staff Login — Bright Smile Dental";
@@ -105,6 +107,7 @@ function Dashboard() {
   const fetchAccess = useServerFn(getStaffAccess);
   const fetchAppointments = useServerFn(listAppointments);
   const setStatus = useServerFn(updateAppointmentStatus);
+  const confirmSlot = useServerFn(confirmAppointment);
   const fetchSettings = useServerFn(getIntegrationSettings);
   const saveWebhook = useServerFn(updateWebhookUrl);
 
@@ -132,6 +135,15 @@ function Dashboard() {
     onError: (error: Error) => toast.error(error.message),
   });
 
+  const confirmMutation = useMutation({
+    mutationFn: (vars: { id: string; confirmedDatetime: string }) => confirmSlot({ data: vars }),
+    onSuccess: () => {
+      toast.success("Appointment confirmed");
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+
   const webhookMutation = useMutation({
     mutationFn: (webhookUrl: string) => saveWebhook({ data: { webhookUrl } }),
     onSuccess: () => {
@@ -140,6 +152,7 @@ function Dashboard() {
     },
     onError: (error: Error) => toast.error(error.message),
   });
+
 
   const rows = useMemo(() => {
     const list = [...(appointments.data ?? [])];
@@ -205,19 +218,20 @@ function Dashboard() {
                 </th>
                 <th className="px-4 py-3">Time</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Confirmed slot</th>
               </tr>
             </thead>
             <tbody>
               {appointments.isLoading && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                  <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                     Loading appointments…
                   </td>
                 </tr>
               )}
               {!appointments.isLoading && rows.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                  <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                     No appointment requests yet.
                   </td>
                 </tr>
@@ -256,6 +270,15 @@ function Dashboard() {
                         </option>
                       ))}
                     </select>
+                  </td>
+                  <td className="px-4 py-3">
+                    <ConfirmCell
+                      row={row}
+                      pending={confirmMutation.isPending}
+                      onConfirm={(confirmedDatetime) =>
+                        confirmMutation.mutate({ id: row.id, confirmedDatetime })
+                      }
+                    />
                   </td>
                 </tr>
               ))}
@@ -310,4 +333,54 @@ function Dashboard() {
       </main>
     </div>
   );
+}
+
+function ConfirmCell({
+  row,
+  pending,
+  onConfirm,
+}: {
+  row: Appointment;
+  pending: boolean;
+  onConfirm: (confirmedDatetime: string) => void;
+}) {
+  const [value, setValue] = useState(() =>
+    row.confirmed_datetime
+      ? toLocalInputValue(row.confirmed_datetime)
+      : `${row.preferred_date}T09:00`,
+  );
+
+  if (row.status !== "requested") {
+    return (
+      <span className="text-xs text-muted-foreground">
+        {row.confirmed_datetime ? new Date(row.confirmed_datetime).toLocaleString() : "—"}
+      </span>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      <input
+        type="datetime-local"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        aria-label={`Confirmed date and time for ${row.patient_name}`}
+        className="rounded-lg border border-input bg-background px-2.5 py-1.5 text-xs text-foreground"
+      />
+      <button
+        type="button"
+        disabled={pending || !value}
+        onClick={() => onConfirm(value)}
+        className="rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground disabled:opacity-60"
+      >
+        Confirm appointment
+      </button>
+    </div>
+  );
+}
+
+function toLocalInputValue(iso: string) {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }

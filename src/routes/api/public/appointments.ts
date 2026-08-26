@@ -38,7 +38,7 @@ export const Route = createFileRoute("/api/public/appointments")({
         let query = client
           .from("appointments")
           .select(
-            "id, patient_id, patient_name, email, phone, service, preferred_date, preferred_time, notes, status, created_at, updated_at",
+            "id, patient_id, patient_name, email, phone, service, preferred_date, preferred_time, notes, status, created_at, updated_at, confirmed_datetime, confirmation_sent, reminder_24h_sent, reminder_2h_sent, reminder_30m_sent",
           )
           .order("created_at", { ascending: false })
           .limit(parsed.data.limit ?? 100);

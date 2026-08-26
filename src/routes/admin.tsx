@@ -218,19 +218,20 @@ function Dashboard() {
                 </th>
                 <th className="px-4 py-3">Time</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Confirmed slot</th>
               </tr>
             </thead>
             <tbody>
               {appointments.isLoading && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                  <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                     Loading appointments…
                   </td>
                 </tr>
               )}
               {!appointments.isLoading && rows.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                  <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                     No appointment requests yet.
                   </td>
                 </tr>
@@ -269,6 +270,15 @@ function Dashboard() {
                         </option>
                       ))}
                     </select>
+                  </td>
+                  <td className="px-4 py-3">
+                    <ConfirmCell
+                      row={row}
+                      pending={confirmMutation.isPending}
+                      onConfirm={(confirmedDatetime) =>
+                        confirmMutation.mutate({ id: row.id, confirmedDatetime })
+                      }
+                    />
                   </td>
                 </tr>
               ))}

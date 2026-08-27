@@ -5,6 +5,12 @@ import updateAppointmentStatus from "./tools/update-appointment-status";
 
 const projectRef = import.meta.env['VITE_SUPABASE_PROJECT_ID'] ?? "project-ref-unset";
 
+// The SDK's tool type marks `outputSchema` optional; under
+// exactOptionalPropertyTypes the inferred `undefined` needs widening here.
+const tools = [listAppointments, getAppointment, updateAppointmentStatus] as unknown as Parameters<
+  typeof defineMcp
+>[0]["tools"];
+
 export default defineMcp({
   name: "bright-smile-clinic",
   title: "Bright Smile Clinic",
@@ -15,5 +21,5 @@ export default defineMcp({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",
   }),
-  tools: [listAppointments, getAppointment, updateAppointmentStatus],
+  tools,
 });

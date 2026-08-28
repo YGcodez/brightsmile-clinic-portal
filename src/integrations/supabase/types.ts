@@ -106,24 +106,42 @@ export type Database = {
       patients: {
         Row: {
           created_at: string
+          date_of_birth: string | null
           email: string
+          first_name: string | null
           id: string
+          last_name: string | null
           name: string
+          patient_id: string
           phone: string | null
+          updated_at: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
+          date_of_birth?: string | null
           email: string
+          first_name?: string | null
           id?: string
+          last_name?: string | null
           name: string
+          patient_id?: string
           phone?: string | null
+          updated_at?: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
+          date_of_birth?: string | null
           email?: string
+          first_name?: string | null
           id?: string
+          last_name?: string | null
           name?: string
+          patient_id?: string
           phone?: string | null
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -153,6 +171,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      gen_patient_id: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

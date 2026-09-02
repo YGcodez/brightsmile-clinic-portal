@@ -73,9 +73,14 @@ export function SiteFooter() {
       <div className="border-t border-border/60">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} {CLINIC.name}. A fictional practice.</p>
-          <Link to="/admin" className="hover:text-foreground">
-            Staff login
-          </Link>
+          <span className="flex items-center gap-4">
+            <Link to="/patient" className="hover:text-foreground">
+              Patient portal
+            </Link>
+            <Link to="/admin" className="hover:text-foreground">
+              Staff login
+            </Link>
+          </span>
         </div>
       </div>
     </footer>
